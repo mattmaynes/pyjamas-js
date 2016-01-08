@@ -93,14 +93,52 @@ var Viper = (function(){
             }, 0);
         }
 
+        /**
+         * Returns if a given version is greater than the other
+         *
+         * @param base  {string} Base version
+         * @param other {string} Version to compare to
+         *
+         * @return {boolean} If the base is greater than the other version
+         */
+        function greaterThan (base, other) {
+            return compare(base, other) > 0;
+        }
 
-        function greaterThan () {}
+        /**
+         * Returns if the given version is less than the other
+         *
+         * @param base  {string} Base version
+         * @param other {string} Version to compare to
+         *
+         * @return {boolean} If the base is less than the other version
+         */
+        function lessThan (base, other){
+            return compare(base, other) < 0;
+        }
 
-        function lessThan (){}
+        /**
+         * Returns if two version are equivalent
+         *
+         * @param base  {string} Base version
+         * @param other {string} Version to compare to
+         *
+         * @return {boolean} If the version are equivalent
+         */
+        function equals (base, other) {
+            return compare(base, other) === 0;
+        }
 
-        function equals () {}
-
-        function toString (){}
+        /**
+         * Returns a string representation of a version array
+         *
+         * @param version {Array<int>}
+         *
+         * @return {string}
+         */
+        function toString (version){
+            return version.join('.');
+        }
 
         return {
             split       : split,
