@@ -157,6 +157,8 @@ var Viper = (function(){
 
     function Viper (){}
 
+    Viper.register = function(){};
+    Viper.unregister = function(){};
     Viper.manifest = function (){};
     Viper.construct = function (){};
 
