@@ -1,5 +1,4 @@
 # Versioned Persistable JavaScript - Viper-JS
-============================================
 
 ## Overview
 Viper is a simple JavaScript library for versioning and persisting objects and
