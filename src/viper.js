@@ -212,7 +212,6 @@ var Viper = (function(){
          * @type {object}
          */
         this.upgrades = {};
-
     }
 
     /**
@@ -254,10 +253,56 @@ var Viper = (function(){
      */
     Viper.register = function(){};
 
+    /**
+     * Removes a class from the ViperDB if it exists, otherwise return null
+     *
+     * @param constructor {function} Object constructor to unregister
+     *
+     * @return {Viper | null} Removed Viper instance or null if the constructor
+     * was not registered
+     * @end
+     */
+    Viper.unregister = function (){};
 
-    Viper.unregister    = function(){};
-    Viper.manifest      = function (){};
-    Viper.construct     = function (){};
+    /**
+     * Manifests an instance of a class as a bare-bones object that confirms
+     * to JavaScript Object Notation. The resulting object will have no
+     * undefined fields, functions or a constructor. There are no references
+     * to the original constructor stored. It is up to the user to keep the
+     * association of the return the type class definition of the manifested
+     * object.
+     *
+     * @param target {object} Target object to manifest
+     *
+     * @return {object} Versioned persistable representation of target
+     */
+    Viper.manifest = function (){};
+
+    /**
+     * Reconstructs a persisted object as an instance of the given constructor.
+     * If the given target is not at the current version of the constructor then
+     * upgraders will be successively applied until the highest version is
+     * achieved.
+     *
+     * @param constructor   {function}  Object constructor
+     * @param target        {object}    Raw instance to use to populate
+     * a new instance of the ocnstructor
+     * @end
+     *
+     * @return {object} A new instance of the constructor
+     */
+    Viper.construct = function (){};
+
+    /**
+     * Returns a JSON string representation of a target instance
+     *
+     * @param target {object} Target object to serialized
+     *
+     * @return {string} JSON string representation of target
+     *
+     * @see Viper.manifest
+     */
+    Viper.toJSON = function(){};
 
     return Viper;
 })();
