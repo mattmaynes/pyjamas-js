@@ -12,7 +12,7 @@ definition.
 
 ### Class Registration
 
-```
+```JavaScript
 // Assume we have some class A that has instance variables foo and bar
 var MyClass = function (){
 
@@ -45,7 +45,7 @@ Viper.register(MyClass, '0.1.2',{
 
 ### Persistence and Construction
 
-```
+```JavaScript
 // Create a new instance of MyClass
 var obj = new MyClass();
 
