@@ -302,7 +302,9 @@ var Viper = (function(){
      *
      * @see Viper.manifest
      */
-    Viper.toJSON = function(){};
+    Viper.toJSON = function(target){
+        return JSON.stringify(Viper.manifest(target));
+    };
 
     return Viper;
 })();
