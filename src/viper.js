@@ -6,6 +6,20 @@
 var Viper = (function(){
 
     /**
+     * Stores relationships between classes and Viper definitions.
+     *
+     * @example
+     * {
+     *      MyClass : <Viper> // MyClass will have a viper instance associated
+     * }
+     * @end
+     *
+     * @private
+     * @type {object}
+     */
+    var ViperDB = {};
+
+    /**
      * Collection of helper functions for handling version numbers. This class
      * contains a set of static functions that deal with Major-Minor-Patch
      * version identifiers.
@@ -155,12 +169,95 @@ var Viper = (function(){
     })();
 
 
-    function Viper (){}
+    /**
+     * Constructs a new viper instance with default values
+     *
+     * @param [version] {string} Current version of instance
+     *
+     * @constructor
+     */
+    function Viper (version){
 
+        /**
+         * Version identifier of current instance
+         * @type {string}
+         */
+        this.version = version | '0.0.0';
+
+        /**
+         * Definitions of instance variables to persist from given instance
+         *
+         * @example
+         * {
+         *      foo : Number,
+         *      bar : String,
+         *      baz : MyOtherClass
+         * }
+         * @end
+         *
+         * @type {object}
+         */
+        this.defines = {};
+
+        /**
+         * Defines a set of upgrade methods to apply to old saves to update
+         * to the current source version
+         *
+         * @example
+         * {
+         *      '0.1.2' : function myUpgrader1(){},
+         *      '0.2.3' : function myUpgrader2(){}
+         * @end
+         *
+         * @type {object}
+         */
+        this.upgrades = {};
+
+    }
+
+    /**
+     * Registers an upgrade function to this viper instance. An upgrade function
+     * must accept a copy of a old version of a save and the current instance.
+     * It should either mutate the current instance of the save or return an
+     * upgraded version.
+     *
+     * @param version {string} Version code that indicates the version of the
+     * instance returned from this upgrade function
+     * @end
+     *
+     * @param upgrader {function} Function to upgrade old save. Prototype:
+     * function( old :  Object, current : Object) : Object
+     * @end
+     *
+     * @return {Viper} An updated Viper instance
+     */
+    Viper.prototype.upgrade = function(){};
+
+    /**
+     * Registers a class into the ViperDB and returns a new Viper instance
+     *
+     * @example
+     * Viper.register(MyClass, '0.1.2', {
+     *      foo : Number,
+     *      bar : String,
+     *      baz : MyOtherClass
+     * });
+     * @end
+     *
+     * @param constructor   {function}  Object constructor to register
+     * @param version       {string}    Current version of object constructor
+     * @param defines       {object}    Definitions of instance variables to
+     * persist when given an instance of the constructor's class
+     * @end
+     *
+     * @return {Viper} A new viper instance
+     */
     Viper.register = function(){};
-    Viper.unregister = function(){};
-    Viper.manifest = function (){};
-    Viper.construct = function (){};
+
+
+    Viper.unregister    = function(){};
+    Viper.manifest      = function (){};
+    Viper.construct     = function (){};
 
     return Viper;
 })();
