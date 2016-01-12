@@ -43,6 +43,7 @@ var Viper = (function(){
          * @return {Array<int>} [major, minor, patch] Version array
          */
         function split (){
+            // TODO
             throw new Error('Version.split - not yet implemented');
         }
 
@@ -89,6 +90,7 @@ var Viper = (function(){
          * @return {Array<int>} A pairwise comparison of each version number
          */
         function diff (base, other){
+            // TODO
             throw new Error('Version.diff - not yet implemented');
         }
 
@@ -230,7 +232,9 @@ var Viper = (function(){
      *
      * @return {Viper} An updated Viper instance
      */
-    Viper.prototype.upgrade = function(){};
+    Viper.prototype.upgrade = function(){
+        // TODO
+    };
 
     /**
      * Registers a class into the ViperDB and returns a new Viper instance
@@ -251,7 +255,9 @@ var Viper = (function(){
      *
      * @return {Viper} A new viper instance
      */
-    Viper.register = function(){};
+    Viper.register = function(){
+        // TODO
+    };
 
     /**
      * Removes a class from the ViperDB if it exists, otherwise return null
@@ -262,7 +268,9 @@ var Viper = (function(){
      * was not registered
      * @end
      */
-    Viper.unregister = function (){};
+    Viper.unregister = function (){
+        // TODO
+    };
 
     /**
      * Manifests an instance of a class as a bare-bones object that confirms
@@ -276,7 +284,9 @@ var Viper = (function(){
      *
      * @return {object} Versioned persistable representation of target
      */
-    Viper.manifest = function (){};
+    Viper.manifest = function (){
+        // TODO
+    };
 
     /**
      * Reconstructs a persisted object as an instance of the given constructor.
@@ -291,7 +301,9 @@ var Viper = (function(){
      *
      * @return {object} A new instance of the constructor
      */
-    Viper.construct = function (){};
+    Viper.construct = function (){
+        // TODO
+    };
 
     /**
      * Returns a JSON string representation of a target instance
