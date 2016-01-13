@@ -1,5 +1,8 @@
 # Versioned Persistable JavaScript - Pyjamas
 
+[![Build Status](https://travis-ci.org/mattmaynes/pyjamas-js.svg)](https://travis-ci.org/mattmaynes/pyjamas-js)
+[![Coverage Status](https://coveralls.io/repos/mattmaynes/pyjamas-js/badge.svg?branch=master&service=github)](https://coveralls.io/github/mattmaynes/pyjamas-js?branch=master)
+
 ## Overview
 Pyjamas is a simple JavaScript library for versioning and persisting objects and
 reapplying them at a later time. Object persistence is a reflection of class
