@@ -49,9 +49,9 @@ var Pyjamas = (function(){
          *
          * @return {Array<int>} [major, minor, patch] Version array
          */
-        function split (){
-            // TODO
-            throw new Error('Version.split - not yet implemented');
+        function split (version){
+            var parts = version.split('.');
+            return [parts[0] | 0, parts[1] | 0, parts[2] | 0];
         }
 
         /**
