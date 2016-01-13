@@ -1,9 +1,16 @@
 
 /**
+ * @name ViperJS
  *
- * @version 0.0.0
+ * Viper is a simple library that provides basic version management for
+ * persisting reflections JavaScript code as JSON.
+ *
+ * @TODO Improve this description!
+ *
+ * @version 0.0.2
  */
 var Viper = (function(){
+    'use strict';
 
     /**
      * Stores relationships between classes and Viper definitions.
