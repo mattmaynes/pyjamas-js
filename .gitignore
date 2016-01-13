@@ -1,0 +1,21 @@
+# Hidden Files
+.*
+
+# Autosaves
+*~
+\#*\#
+
+# Binary files
+*.o
+
+# Output
+bin
+build
+
+# Libraries
+node_modules/
+lib/
+framework/
+
+# Logs
+*.log
