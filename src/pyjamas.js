@@ -1,6 +1,6 @@
 
 /**
- * @name PyjamasJS
+ * @name Pyjamas
  *
  * Pyjamas is a simple library that provides basic version management for
  * persisting reflections JavaScript code as JSON.
@@ -17,7 +17,7 @@ var Pyjamas = (function(){
      *
      * @example
      * {
-     *      MyClass : <Pyjamas> // MyClass will have a viper instance associated
+     *      MyClass : <Pyjamas> // MyClass will have a Pyjamas instance associated
      * }
      * @end
      *
@@ -324,6 +324,13 @@ var Pyjamas = (function(){
     Pyjamas.toJSON = function(target){
         return JSON.stringify(Pyjamas.manifest(target));
     };
+
+    /**
+     * Make Version publicly accessible
+     *
+     * @type {Version}
+     */
+    Pyjamas.Version = Version;
 
     return Pyjamas;
 })();
