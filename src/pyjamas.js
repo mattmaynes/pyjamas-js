@@ -1,30 +1,30 @@
 
 /**
- * @name ViperJS
+ * @name PyjamasJS
  *
- * Viper is a simple library that provides basic version management for
+ * Pyjamas is a simple library that provides basic version management for
  * persisting reflections JavaScript code as JSON.
  *
  * @TODO Improve this description!
  *
  * @version 0.0.2
  */
-var Viper = (function(){
+var Pyjamas = (function(){
     'use strict';
 
     /**
-     * Stores relationships between classes and Viper definitions.
+     * Stores relationships between classes and Pyjamas definitions.
      *
      * @example
      * {
-     *      MyClass : <Viper> // MyClass will have a viper instance associated
+     *      MyClass : <Pyjamas> // MyClass will have a viper instance associated
      * }
      * @end
      *
      * @private
      * @type {object}
      */
-    var ViperDB = {};
+    var PyjamasDB = {};
 
     /**
      * Collection of helper functions for handling version numbers. This class
@@ -185,7 +185,7 @@ var Viper = (function(){
      *
      * @constructor
      */
-    function Viper (version){
+    function Pyjamas (version){
 
         /**
          * Version identifier of current instance
@@ -237,17 +237,17 @@ var Viper = (function(){
      * function( old :  Object, current : Object) : Object
      * @end
      *
-     * @return {Viper} An updated Viper instance
+     * @return {Pyjamas} An updated Pyjamas instance
      */
-    Viper.prototype.upgrade = function(){
+    Pyjamas.prototype.upgrade = function(){
         // TODO
     };
 
     /**
-     * Registers a class into the ViperDB and returns a new Viper instance
+     * Registers a class into the PyjamasDB and returns a new Pyjamas instance
      *
      * @example
-     * Viper.register(MyClass, '0.1.2', {
+     * Pyjamas.register(MyClass, '0.1.2', {
      *      foo : Number,
      *      bar : String,
      *      baz : MyOtherClass
@@ -260,22 +260,22 @@ var Viper = (function(){
      * persist when given an instance of the constructor's class
      * @end
      *
-     * @return {Viper} A new viper instance
+     * @return {Pyjamas} A new viper instance
      */
-    Viper.register = function(){
+    Pyjamas.register = function(){
         // TODO
     };
 
     /**
-     * Removes a class from the ViperDB if it exists, otherwise return null
+     * Removes a class from the PyjamasDB if it exists, otherwise return null
      *
      * @param constructor {function} Object constructor to unregister
      *
-     * @return {Viper | null} Removed Viper instance or null if the constructor
-     * was not registered
+     * @return {Pyjamas | null} Removed Pyjamas instance or null if the
+     * constructor was not registered
      * @end
      */
-    Viper.unregister = function (){
+    Pyjamas.unregister = function (){
         // TODO
     };
 
@@ -291,7 +291,7 @@ var Viper = (function(){
      *
      * @return {object} Versioned persistable representation of target
      */
-    Viper.manifest = function (){
+    Pyjamas.manifest = function (){
         // TODO
     };
 
@@ -308,7 +308,7 @@ var Viper = (function(){
      *
      * @return {object} A new instance of the constructor
      */
-    Viper.construct = function (){
+    Pyjamas.construct = function (){
         // TODO
     };
 
@@ -319,15 +319,15 @@ var Viper = (function(){
      *
      * @return {string} JSON string representation of target
      *
-     * @see Viper.manifest
+     * @see Pyjamas.manifest
      */
-    Viper.toJSON = function(target){
-        return JSON.stringify(Viper.manifest(target));
+    Pyjamas.toJSON = function(target){
+        return JSON.stringify(Pyjamas.manifest(target));
     };
 
-    return Viper;
+    return Pyjamas;
 })();
 
 if('undefined' !== typeof module){
-    module.exports = Viper;
+    module.exports = Pyjamas;
 }

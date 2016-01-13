@@ -1,9 +1,9 @@
-# Versioned Persistable JavaScript - Viper-JS
+# Versioned Persistable JavaScript - Pyjamas
 
 ## Overview
-Viper is a simple JavaScript library for versioning and persisting objects and
+Pyjamas is a simple JavaScript library for versioning and persisting objects and
 reapplying them at a later time. Object persistence is a reflection of class
-definitions which can lead to incompatibility as code changes. Viper offers a
+definitions which can lead to incompatibility as code changes. Pyjamas offers a
 solution to source changes in the form of *upgraders* that can be applied to
 persisted objects to mutate fields to reflect the current state of the source
 definition.
@@ -21,9 +21,9 @@ var MyClass = function (){
     ...
 };
 
-// Register the class with Viper and include the current version as well
+// Register the class with Pyjamas and include the current version as well
 // as the instance variables that are to be persisted.
-Viper.register(MyClass, '0.1.2',{
+Pyjamas.register(MyClass, '0.1.2',{
     foo : Number,
     bar : String
 })
@@ -50,8 +50,8 @@ Viper.register(MyClass, '0.1.2',{
 var obj = new MyClass();
 
 // Manifrest a persistable object form
-var json = Viper.toJSON(obj);
+var json = Pyjamas.toJSON(obj);
 
 // Reconstruct the instance from above
-var objCopy = Viper.construct(MyClass, json);
+var objCopy = Pyjamas.construct(MyClass, json);
 ```
