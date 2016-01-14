@@ -17,7 +17,7 @@ var Pyjamas = (function(){
      *
      * @example
      * {
-     *      MyClass : <Pyjamas> // MyClass will have a Pyjamas instance associated
+     *      MyClass : <Pyjamas> // MyClass is associated with a Pyjamas instance
      * }
      * @end
      *
@@ -97,8 +97,13 @@ var Pyjamas = (function(){
          * @return {Array<int>} A pairwise comparison of each version number
          */
         function diff (base, other){
-            // TODO
-            throw new Error('Version.diff - not yet implemented');
+            var o = split(other);
+
+            // Map over the base version and subtract the
+            // corresponding index of the other version
+            return split(base).map(function(v, i){
+                return v - o[i];
+            });
         }
 
         /**
@@ -112,7 +117,19 @@ var Pyjamas = (function(){
          */
         function compare (base, other){
             return diff(base, other).reduce(function(prev, curr){
-                return prev === 0 ? Math.sign(curr) : prev;
+                // Note: This is not overly elegant but it is highly optimized
+                // by JavaScript JIT compilers
+                //
+                // Logic:
+                //  if prev === 0
+                //      return prev
+                //  else if !curr
+                //      return 0
+                //  else if curr < 0
+                //      return -1
+                //  else
+                //      return 1
+                return prev === 0 ? curr ? curr < 0 ? - 1 : 1 : 0 : prev;
             }, 0);
         }
 
