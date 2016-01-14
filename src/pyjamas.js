@@ -233,6 +233,7 @@ var Pyjamas = (function(){
          * {
          *      '0.1.2' : function myUpgrader1(){},
          *      '0.2.3' : function myUpgrader2(){}
+         * }
          * @end
          *
          * @type {object}
