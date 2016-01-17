@@ -56,7 +56,7 @@ var Pyjamas = (function(){
             insert  : insert
         };
 
-    })();
+    }());
 
     /**
      * Collection of helper functions for handling version numbers. This class
@@ -224,7 +224,7 @@ var Pyjamas = (function(){
             equals      : equals,
             toString    : toString
         };
-    })();
+    }());
 
 
     /**
@@ -435,7 +435,7 @@ var Pyjamas = (function(){
     Pyjamas.DB = PyjamasDB;
 
     return Pyjamas;
-})();
+}());
 
 if('undefined' !== typeof module){
     module.exports = Pyjamas;
