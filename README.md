@@ -32,16 +32,16 @@ Pyjamas.register(MyClass, '0.1.2',{
 })
 // Add upgrader for conversion from saves older than version '0.1.1' to
 // version '0.1.1'.
-.upgrade('0.1.1', function(oldSave){
-    oldSave.foo = 1;
-    return oldSave;
+.upgrade('0.1.1', function(oldSave, newSave){
+    newSave.foo = 1;
+    return newSave;
 })
 // Add upgrader that will be applied to version older than '0.1.2' but newer
 // than '0.1.1'. If a version is older than '0.1.1' then the upgraders will be
 // applied in succession.
-.upgrade('0.1.2', function(oldSave){
-    oldSave.bar = 'Hello';
-    return oldSave;
+.upgrade('0.1.2', function(oldSave, newSave){
+    newSave.bar = 'Hello';
+    return newSave;
 });
 
 ```
