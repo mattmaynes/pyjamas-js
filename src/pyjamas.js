@@ -357,8 +357,8 @@ var Pyjamas = (function(){
      *
      * @return {Pyjamas} A new Pyjamas instance
      */
-    Pyjamas.register = function(){
-        // TODO
+    Pyjamas.register = function(constructor, version, defines){
+        return PyjamasDB.insert(constructor, new Pyjamas(version,defines));
     };
 
     /**
