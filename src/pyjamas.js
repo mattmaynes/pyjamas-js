@@ -48,7 +48,7 @@ var Pyjamas = (function(){
          * @return {Pyjamas | null}
          */
         function fetch (target){
-            return db[target.constructor] | null;
+            return db[target.constructor] || null;
         }
 
         return {
@@ -241,7 +241,9 @@ var Pyjamas = (function(){
         var key, output = {};
 
         for(key in keys){
-            if(target.hasOwnProperty(key) && target[key]){
+            if(target.hasOwnProperty(key)           &&
+                'undefined' !== typeof target[key]  &&
+                'function'  !== typeof target[key]  ){
                 output[key] = encode(target[key]);
             }
         }
@@ -270,19 +272,20 @@ var Pyjamas = (function(){
     }
 
     /**
-     * Constructs a new viper instance with default values
+     * Constructs a new Pyjamas instance with default values
      *
      * @param [version] {string} Current version of instance
+     * @param [defines] {object} Definitions of instance variables
      *
      * @constructor
      */
-    function Pyjamas (version){
+    function Pyjamas (version, defines){
 
         /**
          * Version identifier of current instance
          * @type {string}
          */
-        this.version = version | '0.0.0';
+        this.version = version || '0.0.0';
 
         /**
          * Definitions of instance variables to persist from given instance
@@ -297,7 +300,7 @@ var Pyjamas = (function(){
          *
          * @type {object}
          */
-        this.defines = {};
+        this.defines = defines || {};
 
         /**
          * Defines a set of upgrade methods to apply to old saves to update
@@ -316,10 +319,10 @@ var Pyjamas = (function(){
     }
 
     /**
-     * Registers an upgrade function to this viper instance. An upgrade function
-     * must accept a copy of a old version of a save and the current instance.
-     * It should either mutate the current instance of the save or return an
-     * upgraded version.
+     * Registers an upgrade function to this Pyjamas instance. An upgrade
+     * function must accept a copy of a old version of a save and the current
+     * instance. It should either mutate the current instance of the save or
+     * return an upgraded version.
      *
      * @param version {string} Version code that indicates the version of the
      * instance returned from this upgrade function
@@ -352,7 +355,7 @@ var Pyjamas = (function(){
      * persist when given an instance of the constructor's class
      * @end
      *
-     * @return {Pyjamas} A new viper instance
+     * @return {Pyjamas} A new Pyjamas instance
      */
     Pyjamas.register = function(){
         // TODO
@@ -423,6 +426,13 @@ var Pyjamas = (function(){
      * @type {Version}
      */
     Pyjamas.Version = Version;
+
+    /**
+     * Make Pyjamas DB publicly accessible
+     *
+     * @type {PyjamasDB}
+     */
+    Pyjamas.DB = PyjamasDB;
 
     return Pyjamas;
 })();
