@@ -176,4 +176,48 @@ describe('Pyjamas', function(){
         });
 
     });
+
+    describe ('Pyjamas.register', function(){
+        var myObj;
+        var MyClass = (function(){
+            function MyClassA(){
+                this.value = 0;
+                this.name = 'test';
+            }
+
+            MyClassA.prototype.add = function(){
+                this.value++;
+            };
+
+            return MyClassA;
+        })();
+
+        beforeEach(function(){
+            myObj = new MyClass();
+        });
+
+        it('Returns a pyjamas instance with the correct fields', function(){
+            var instance = Pyjamas.register(MyClass, '0.1.0', {
+                value : Number,
+                name : String
+            });
+            expect(instance.version).toEqual('0.1.0');
+            expect(instance.defines).toEqual({
+                value : Number,
+                name : String
+            });
+        });
+
+        it('Adds the class constructor and pyjamas instance to the DB', function(){
+            Pyjamas.register(MyClass, '0.1.0',{
+                value : Number,
+                name : String
+            });
+            expect(Pyjamas.DB.fetch(myObj).version).toEqual('0.1.0');
+            expect(Pyjamas.DB.fetch(myObj).defines).toEqual({
+                value : Number,
+                name : String
+            });
+        });
+    });
 });
