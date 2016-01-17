@@ -7,7 +7,7 @@
  *
  * @TODO Improve this description!
  *
- * @version 0.0.2
+ * @version 0.0.3
  */
 var Pyjamas = (function(){
     'use strict';
@@ -15,16 +15,48 @@ var Pyjamas = (function(){
     /**
      * Stores relationships between classes and Pyjamas definitions.
      *
-     * @example
-     * {
-     *      MyClass : <Pyjamas> // MyClass is associated with a Pyjamas instance
-     * }
-     * @end
-     *
      * @private
-     * @type {object}
      */
-    var PyjamasDB = {};
+    var PyjamasDB = (function(){
+
+        /**
+         * Pyjamas database
+         *
+         * @private
+         * @type {object}
+         */
+        var db = {};
+
+        /**
+         * Adds an entry to the Pyjamas database
+         *
+         * @param constructor   {function}  Object constructor
+         * @param instance      {Pyjamas}   Pyjamas instance
+         *
+         * @return {Pyjamas} Inserted pyjamas instance
+         */
+        function insert (constructor, instance){
+            db[constructor] = instance;
+            return instance;
+        }
+
+        /**
+         * Fetches an entry from the database or returns null
+         *
+         * @param target {object} Target to return related pyjamas instance for
+         *
+         * @return {Pyjamas | null}
+         */
+        function fetch (target){
+            return db[target.constructor] | null;
+        }
+
+        return {
+            fetch   : fetch,
+            insert  : insert
+        };
+
+    })();
 
     /**
      * Collection of helper functions for handling version numbers. This class
@@ -196,6 +228,48 @@ var Pyjamas = (function(){
 
 
     /**
+     * Encodes each key in the target if it is defined and defined in the
+     * prototype of the object
+     *
+     * @param keys      {object} Object with the keys of the target to encode
+     * @param target    {object} Object to encode
+     * @param [version] {string} Version string of output
+     *
+     * @return {object} Encoded object
+     */
+    function encodeEach (keys, target, version){
+        var key, output = {};
+
+        for(key in keys){
+            if(target.hasOwnProperty(key) && target[key]){
+                output[key] = encode(target[key]);
+            }
+        }
+
+        output.version = version;
+        return output;
+    }
+
+    /**
+     * Encodes the given target into a raw object that conforms to JavaScript
+     * Object Notation. The resulting object will not have any undefined or
+     * function references.
+     *
+     * @param target {object} Target to encode
+     *
+     * @return {object} Encoded object
+     *
+     * @private
+     */
+    function encode (target){
+        var pjs = PyjamasDB.fetch(target);
+
+        return pjs ? encodeEach(pjs.defines, target, pjs.version) :
+            target instanceof Object ? encodeEach(target, target) :
+            target;
+    }
+
+    /**
      * Constructs a new viper instance with default values
      *
      * @param [version] {string} Current version of instance
@@ -309,8 +383,8 @@ var Pyjamas = (function(){
      *
      * @return {object} Versioned persistable representation of target
      */
-    Pyjamas.manifest = function (){
-        // TODO
+    Pyjamas.manifest = function (target){
+        return encode(target);
     };
 
     /**
