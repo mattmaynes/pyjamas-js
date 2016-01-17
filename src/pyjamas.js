@@ -7,19 +7,13 @@
  *
  * @TODO Improve this description!
  *
- * @version 0.0.2
+ * @version 0.0.3
  */
 var Pyjamas = (function(){
     'use strict';
 
     /**
      * Stores relationships between classes and Pyjamas definitions.
-     *
-     * @example
-     * {
-     *      MyClass : <Pyjamas> // MyClass is associated with a Pyjamas instance
-     * }
-     * @end
      *
      * @private
      */
@@ -234,19 +228,64 @@ var Pyjamas = (function(){
 
 
     /**
-     * Constructs a new viper instance with default values
+     * Encodes each key in the target if it is defined and defined in the
+     * prototype of the object
+     *
+     * @param keys      {object} Object with the keys of the target to encode
+     * @param target    {object} Object to encode
+     * @param [version] {string} Version string of output
+     *
+     * @return {object} Encoded object
+     */
+    function encodeEach (keys, target, version){
+        var key, output = {};
+
+        for(key in keys){
+            if(target.hasOwnProperty(key)           &&
+                'undefined' !== typeof target[key]  &&
+                'function'  !== typeof target[key]  ){
+                output[key] = encode(target[key]);
+            }
+        }
+
+        output.version = version;
+        return output;
+    }
+
+    /**
+     * Encodes the given target into a raw object that conforms to JavaScript
+     * Object Notation. The resulting object will not have any undefined or
+     * function references.
+     *
+     * @param target {object} Target to encode
+     *
+     * @return {object} Encoded object
+     *
+     * @private
+     */
+    function encode (target){
+        var pjs = PyjamasDB.fetch(target);
+
+        return pjs ? encodeEach(pjs.defines, target, pjs.version) :
+            target instanceof Object ? encodeEach(target, target) :
+            target;
+    }
+
+    /**
+     * Constructs a new Pyjamas instance with default values
      *
      * @param [version] {string} Current version of instance
+     * @param [defines] {object} Definitions of instance variables
      *
      * @constructor
      */
-    function Pyjamas (version){
+    function Pyjamas (version, defines){
 
         /**
          * Version identifier of current instance
          * @type {string}
          */
-        this.version = version | '0.0.0';
+        this.version = version || '0.0.0';
 
         /**
          * Definitions of instance variables to persist from given instance
@@ -261,7 +300,7 @@ var Pyjamas = (function(){
          *
          * @type {object}
          */
-        this.defines = {};
+        this.defines = defines || {};
 
         /**
          * Defines a set of upgrade methods to apply to old saves to update
@@ -280,10 +319,10 @@ var Pyjamas = (function(){
     }
 
     /**
-     * Registers an upgrade function to this viper instance. An upgrade function
-     * must accept a copy of a old version of a save and the current instance.
-     * It should either mutate the current instance of the save or return an
-     * upgraded version.
+     * Registers an upgrade function to this Pyjamas instance. An upgrade
+     * function must accept a copy of a old version of a save and the current
+     * instance. It should either mutate the current instance of the save or
+     * return an upgraded version.
      *
      * @param version {string} Version code that indicates the version of the
      * instance returned from this upgrade function
@@ -316,7 +355,7 @@ var Pyjamas = (function(){
      * persist when given an instance of the constructor's class
      * @end
      *
-     * @return {Pyjamas} A new viper instance
+     * @return {Pyjamas} A new Pyjamas instance
      */
     Pyjamas.register = function(){
         // TODO
@@ -347,8 +386,8 @@ var Pyjamas = (function(){
      *
      * @return {object} Versioned persistable representation of target
      */
-    Pyjamas.manifest = function (){
-        // TODO
+    Pyjamas.manifest = function (target){
+        return encode(target);
     };
 
     /**
@@ -387,6 +426,13 @@ var Pyjamas = (function(){
      * @type {Version}
      */
     Pyjamas.Version = Version;
+
+    /**
+     * Make Pyjamas DB publicly accessible
+     *
+     * @type {PyjamasDB}
+     */
+    Pyjamas.DB = PyjamasDB;
 
     return Pyjamas;
 })();
