@@ -22,9 +22,47 @@ var Pyjamas = (function(){
      * @end
      *
      * @private
-     * @type {object}
      */
-    var PyjamasDB = {};
+    var PyjamasDB = (function(){
+
+        /**
+         * Pyjamas database
+         *
+         * @private
+         * @type {object}
+         */
+        var db = {};
+
+        /**
+         * Adds an entry to the Pyjamas database
+         *
+         * @param constructor   {function}  Object constructor
+         * @param instance      {Pyjamas}   Pyjamas instance
+         *
+         * @return {Pyjamas} Inserted pyjamas instance
+         */
+        function insert (constructor, instance){
+            db[constructor] = instance;
+            return instance;
+        }
+
+        /**
+         * Fetches an entry from the database or returns null
+         *
+         * @param target {object} Target to return related pyjamas instance for
+         *
+         * @return {Pyjamas | null}
+         */
+        function fetch (target){
+            return db[target.constructor] || null;
+        }
+
+        return {
+            fetch   : fetch,
+            insert  : insert
+        };
+
+    })();
 
     /**
      * Collection of helper functions for handling version numbers. This class
