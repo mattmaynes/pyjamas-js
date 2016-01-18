@@ -175,7 +175,7 @@ var Pyjamas = (function(){
                 //      return -1
                 //  else
                 //      return 1
-                return prev === 0 ? curr ? curr < 0 ? - 1 : 1 : 0 : prev;
+                return prev === 0 ? curr ? curr < 0 ? -1 : 1 : 0 : prev;
             }, 0);
         }
 
