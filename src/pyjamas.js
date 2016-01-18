@@ -334,8 +334,9 @@ var Pyjamas = (function(){
      *
      * @return {Pyjamas} An updated Pyjamas instance
      */
-    Pyjamas.prototype.upgrade = function(){
-        // TODO
+    Pyjamas.prototype.upgrade = function(version, upgrader){
+        this.upgrades[version] = upgrader;
+        return this;
     };
 
     /**
@@ -358,7 +359,7 @@ var Pyjamas = (function(){
      * @return {Pyjamas} A new Pyjamas instance
      */
     Pyjamas.register = function(constructor, version, defines){
-        return PyjamasDB.insert(constructor, new Pyjamas(version,defines));
+        return PyjamasDB.insert(constructor, new Pyjamas(version, defines));
     };
 
     /**
