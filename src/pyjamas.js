@@ -51,9 +51,23 @@ var Pyjamas = (function(){
             return db[target.constructor] || null;
         }
 
+        /**
+        * Removes an entry from the database and returns said entry or null
+        *
+        * @param constructor {function} Object constructor
+        *
+        * @return {Pyjamas | null}
+        */
+        function remove(constructor){
+            var instance = db[constructor];
+            delete db[constructor];
+            return instance;
+        }
+
         return {
             fetch   : fetch,
-            insert  : insert
+            insert  : insert,
+            remove  : remove
         };
 
     }());
@@ -371,8 +385,8 @@ var Pyjamas = (function(){
      * constructor was not registered
      * @end
      */
-    Pyjamas.unregister = function (){
-        // TODO
+    Pyjamas.unregister = function (constructor){
+        return PyjamasDB.remove(constructor);
     };
 
     /**

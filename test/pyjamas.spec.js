@@ -192,16 +192,16 @@ describe('Pyjamas', function(){
     describe ('Pyjamas.register', function(){
         var myObj;
         var MyClass = (function(){
-            function MyClassA(){
+            function MyClass(){
                 this.value = 0;
                 this.name = 'test';
             }
 
-            MyClassA.prototype.add = function(){
+            MyClass.prototype.add = function(){
                 this.value++;
             };
 
-            return MyClassA;
+            return MyClass;
         })();
 
         beforeEach(function(){
@@ -230,6 +230,40 @@ describe('Pyjamas', function(){
                 value : Number,
                 name : String
             });
+        });
+    });
+    
+    describe ('Pyjamas.unregister', function(){
+        var myObj, myInstance;
+        var MyClass = (function(){
+            function MyClass(){
+                this.value = 0;
+                this.name = 'test';
+            }
+
+            MyClass.prototype.add = function(){
+                this.value++;
+            };
+
+            return MyClass;
+        })();
+
+        beforeEach(function(){
+            myObj = new MyClass();
+            myInstance = Pyjamas.register(MyClass, '0.1.0' , {
+                value : Number,
+                name : String
+            });
+        });
+
+        it('Returns a pyjamas instance with the correct fields', function(){
+            expect(Pyjamas.unregister(MyClass)).toEqual(myInstance);
+        });
+
+        it('Removes the pyjamas instance from the database', function(){
+            expect(Pyjamas.DB.fetch(myObj)).toEqual(myInstance);
+            Pyjamas.unregister(MyClass);
+            expect(Pyjamas.DB.fetch(myObj)).toEqual(null);
         });
     });
 });
