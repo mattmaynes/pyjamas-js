@@ -413,7 +413,7 @@ var Pyjamas = (function(){
      *
      * @param constructor   {function}  Object constructor
      * @param target        {object}    Raw instance to use to populate
-     * a new instance of the ocnstructor
+     * a new instance of the constructor
      * @end
      *
      * @return {object} A new instance of the constructor
