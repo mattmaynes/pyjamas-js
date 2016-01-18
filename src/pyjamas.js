@@ -52,12 +52,12 @@ var Pyjamas = (function(){
         }
 
         /**
-        * Removes an entry from the database and returns said entry or null
-        *
-        * @param constructor {function} Object constructor
-        *
-        * @return {Pyjamas | null}
-        */
+         * Removes an entry from the database and returns said entry or null
+         *
+         * @param constructor {function} Object constructor
+         *
+         * @return {Pyjamas | null}
+         */
         function remove(constructor){
             var instance = db[constructor];
             delete db[constructor];
