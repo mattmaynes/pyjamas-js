@@ -14,6 +14,7 @@
         "url"	: "https://github.com/mattmaynes/pyjamas-js.git"
     },
     "devDependencies" : {
+        "jsdoc"                     : "~3.4",
         "phantomjs"                 : "~1.9",
         "karma"						: "~0.12",
         "karma-jasmine"				: "~0.2",
@@ -23,7 +24,10 @@
         "karma-phantomjs-launcher"	: "~0.2"
     },
     "scripts" : {
-        "test"		: "./node_modules/.bin/karma start --signle-run --browsers PhantomJS test/karma.conf.js",
-        "coverage"	: "cat ./build/reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+        "test"		    : "./node_modules/.bin/karma start --signle-run --browsers PhantomJS test/karma.conf.js",
+        "coverage"	    : "cat ./build/reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+        "make-js"       : "mkdir -p bin && uglify -s src/*.js -o bin/pyjamas.min.js",
+        "make-doc"      : "mkdir -p doc && jsdoc -d doc -r src",
+        "make"          : "npm test && npm run make-js && npm run make-doc"
     }
 }
