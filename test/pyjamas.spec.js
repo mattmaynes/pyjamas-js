@@ -177,6 +177,65 @@ describe('Pyjamas', function(){
 
     });
 
+    describe('Pyjamas.construct', function(){
+
+        var myA, myB, myRawA, myRawB;
+
+        var MyClassA = (function(){
+            function MyClassA(){
+                this.value = 0;
+            }
+
+            MyClassA.prototype.add = function(){
+                this.value++;
+            };
+
+            return MyClassA;
+        })();
+
+        var MyClassB = (function(){
+            function MyClassB(name){
+                this.name = name;
+                this.a = new MyClassA();
+                this.b = 1;
+            }
+            return MyClassB;
+        })();
+
+        beforeEach(function(){
+            myA = new MyClassA();
+            myB = new MyClassB('Pyjamas');
+
+            Pyjamas.DB.insert(MyClassA, new Pyjamas('0.1.0', {
+                value : Number
+            }));
+
+            Pyjamas.DB.insert(MyClassB, new Pyjamas('0.2.0', {
+                name    : String,
+                a       : MyClassA,
+                b       : null
+            }));
+
+            myRawA = Pyjamas.manifest(myA);
+            myRawB = Pyjamas.manifest(myB);
+        });
+
+        it('Constructs single objects', function(){
+            expect(
+                Pyjamas.construct(MyClassA, myRawA)
+            ).toEqual(myA);
+        });
+
+        it('Recursively constructs objects', function(){
+            expect(
+                Pyjamas.construct(MyClassB, myRawB)
+            ).toEqual(myB);
+        });
+
+
+    });
+
+
     describe('Pyjamas.prototype.upgrade', function(){
         it('Adds an upgrader to a pyjamas instance', function(){
             var pjs = new Pyjamas(),
@@ -225,14 +284,14 @@ describe('Pyjamas', function(){
                 value : Number,
                 name : String
             });
-            expect(Pyjamas.DB.fetch(myObj).version).toEqual('0.1.0');
-            expect(Pyjamas.DB.fetch(myObj).defines).toEqual({
+            expect(Pyjamas.DB.fetch(myObj.constructor).version).toEqual('0.1.0');
+            expect(Pyjamas.DB.fetch(myObj.constructor).defines).toEqual({
                 value : Number,
                 name : String
             });
         });
     });
-    
+
     describe ('Pyjamas.unregister', function(){
         var myObj, myInstance;
         var MyClass = (function(){
@@ -261,9 +320,9 @@ describe('Pyjamas', function(){
         });
 
         it('Removes the pyjamas instance from the database', function(){
-            expect(Pyjamas.DB.fetch(myObj)).toEqual(myInstance);
+            expect(Pyjamas.DB.fetch(myObj.constructor)).toEqual(myInstance);
             Pyjamas.unregister(MyClass);
-            expect(Pyjamas.DB.fetch(myObj)).toEqual(null);
+            expect(Pyjamas.DB.fetch(myObj.constructor)).toEqual(null);
         });
     });
 });
