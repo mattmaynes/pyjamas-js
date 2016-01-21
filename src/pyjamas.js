@@ -40,14 +40,25 @@ var Pyjamas = (function(){
         }
 
         /**
+         * Returns if the given constructor is contained in the Db
+         *
+         * @param constructor {function} Object constructor
+         *
+         * @return {boolean}
+         */
+        function contains (constructor){
+            return constructor in db;
+        }
+
+        /**
          * Fetches an entry from the database or returns null
          *
-         * @param target {object} Target to return related pyjamas instance for
+         * @param constructor {function} Object constructor
          *
          * @return {Pyjamas.Pyjamas | null}
          */
-        function fetch (target){
-            return db[target.constructor] || null;
+        function fetch (constructor){
+            return db[constructor] || null;
         }
 
         /**
@@ -57,16 +68,17 @@ var Pyjamas = (function(){
          *
          * @return {Pyjamas.Pyjamas | null}
          */
-        function remove(constructor){
+        function remove (constructor){
             var instance = db[constructor];
             delete db[constructor];
             return instance;
         }
 
         return {
-            fetch   : fetch,
-            insert  : insert,
-            remove  : remove
+            contains    : contains,
+            fetch       : fetch,
+            insert      : insert,
+            remove      : remove
         };
 
     }());
@@ -253,6 +265,17 @@ var Pyjamas = (function(){
         };
     }());
 
+    /**
+     * Returns the constructor for the given target
+     *
+     * @param target {object} Object to get constructor of
+     *
+     * @return {function} Object's constructor
+     * @private
+     */
+    function getConstructor (target){
+        return 'undefined' === typeof target ? function(){} : target.constructor;
+    }
 
     /**
      * Encodes each key in the target if it is defined and defined in the
@@ -263,6 +286,7 @@ var Pyjamas = (function(){
      * @param [version] {string} Version string of output
      *
      * @return {object} Encoded object
+     * @private
      */
     function encodeEach (keys, target, version){
         var key, output = {};
@@ -287,15 +311,58 @@ var Pyjamas = (function(){
      * @param target {object} Target to encode
      *
      * @return {object} Encoded object
-     *
      * @private
      */
     function encode (target){
-        var pjs = PyjamasDB.fetch(target);
+        var pjs = PyjamasDB.fetch(getConstructor(target));
 
         return pjs ? encodeEach(pjs.defines, target, pjs.version) :
             target instanceof Object ? encodeEach(target, target) :
             target;
+    }
+
+    /**
+     * Checks if the given value is an instance of the constructor.
+     * If so then returns the value, otherwise it returns a new
+     * instance of the constructor
+     *
+     * @param constructor   {function}  Object constructor
+     * @param value         {*}         Instance of constructor or nothing
+     *
+     * @return {*} An instance of the constructor
+     */
+    function construct (constructor, value){
+        if ('function' === typeof constructor){
+            return getConstructor(value) === constructor ?
+                value :
+                new constructor(); // jshint ignore : line
+        }
+        return value;
+    }
+
+    /**
+     * Decodes an object to become an instance of the given constructor
+     *
+     * @param constructor   {function}  Object constructor
+     * @param target        {object}    Raw object that populates a new instance
+     *
+     * @return {object} New instance of the constructor
+     * @private
+     */
+    function decode (constructor, target){
+        var key, instance, pjs;
+
+        instance = construct(constructor, target);
+
+        if (PyjamasDB.contains(constructor)){
+            pjs = PyjamasDB.fetch(constructor);
+
+            for(key in pjs.defines){
+                instance[key] = decode(pjs.defines[key], target[key]);
+            }
+        }
+
+        return instance;
     }
 
     /**
@@ -448,8 +515,8 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas
      */
-    Pyjamas.construct = function (){
-        // TODO
+    Pyjamas.construct = function (constructor, target){
+        return decode(constructor, target);
     };
 
     /**
