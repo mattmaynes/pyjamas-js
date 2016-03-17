@@ -352,14 +352,27 @@ var Pyjamas = (function () {
      * @private
      */
     function decode (constructor, target) {
-        var key, instance, pjs;
+        var key, instance, pjs, versions, version;
 
         instance = construct(constructor, target);
 
+        // If the constructor is in the Pyjamas database
+        // then we need to fetch the Pyjamas configuration
+        // so that we can apply the correct properties to
+        // the new instance.
         if (PyjamasDB.contains(constructor)) {
             pjs = PyjamasDB.fetch(constructor);
 
-            for(key in pjs.defines) {
+            // Before we decode the constructor we need to apply
+            // any defined upgrade functions to the raw object
+            versions = Object.keys(pjs.upgrades).sort(Version.compare);
+            for (version in versions) {
+                target = pjs.upgrades[version](target);
+            }
+
+            // For each defined value we need to decode it
+            // and recursively apply  the corresponding constructor
+            for (key in pjs.defines) {
                 instance[key] = decode(pjs.defines[key], target[key]);
             }
         }
