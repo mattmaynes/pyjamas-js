@@ -8,7 +8,7 @@
  * @version 0.0.3
  * @namespace Pyjamas
  */
-var Pyjamas = (function(){
+var Pyjamas = (function () {
     'use strict';
 
     /**
@@ -16,7 +16,7 @@ var Pyjamas = (function(){
      *
      * @private
      */
-    var PyjamasDB = (function(){
+    var PyjamasDB = (function () {
 
         /**
          * Pyjamas database
@@ -34,7 +34,7 @@ var Pyjamas = (function(){
          *
          * @return {Pyjamas.Pyjamas} Inserted pyjamas instance
          */
-        function insert (constructor, instance){
+        function insert (constructor, instance) {
             db[constructor] = instance;
             return instance;
         }
@@ -46,7 +46,7 @@ var Pyjamas = (function(){
          *
          * @return {boolean}
          */
-        function contains (constructor){
+        function contains (constructor) {
             return constructor in db;
         }
 
@@ -57,7 +57,7 @@ var Pyjamas = (function(){
          *
          * @return {Pyjamas.Pyjamas | null}
          */
-        function fetch (constructor){
+        function fetch (constructor) {
             return db[constructor] || null;
         }
 
@@ -68,7 +68,7 @@ var Pyjamas = (function(){
          *
          * @return {Pyjamas.Pyjamas | null}
          */
-        function remove (constructor){
+        function remove (constructor) {
             var instance = db[constructor];
             delete db[constructor];
             return instance;
@@ -100,7 +100,7 @@ var Pyjamas = (function(){
      * @class Version
      * @memberof Pyjamas
      */
-    var Version = (function(){
+    var Version = (function () {
 
         /**
          * Given a string representation of a version, convert the version
@@ -111,7 +111,7 @@ var Pyjamas = (function(){
          * @return {Array<int>} [major, minor, patch] Version array
          * @memberof Pyjamas.Version
          */
-        function split (version){
+        function split (version) {
             var parts = version.split('.');
             return [parts[0] | 0, parts[1] | 0, parts[2] | 0];
         }
@@ -124,7 +124,7 @@ var Pyjamas = (function(){
          * @return {int} Major version number
          * @memberof Pyjamas.Version
          */
-        function major (version){
+        function major (version) {
             return split(version)[0];
         }
 
@@ -136,7 +136,7 @@ var Pyjamas = (function(){
          * @return {int} Minor version number
          * @memberof Pyjamas.Version
          */
-        function minor (version){
+        function minor (version) {
             return split(version)[1];
         }
 
@@ -148,7 +148,7 @@ var Pyjamas = (function(){
          * @return {int}
          * @memberof Pyjamas.Version
          */
-        function patch (version){
+        function patch (version) {
             return split(version)[2];
         }
 
@@ -162,12 +162,12 @@ var Pyjamas = (function(){
          * @return {Array<int>} A pairwise comparison of each version number
          * @memberof Pyjamas.Version
          */
-        function diff (base, other){
+        function diff (base, other) {
             var o = split(other);
 
             // Map over the base version and subtract the
             // corresponding index of the other version
-            return split(base).map(function(v, i){
+            return split(base).map(function (v, i) {
                 return v - o[i];
             });
         }
@@ -182,8 +182,8 @@ var Pyjamas = (function(){
          * @return {int} Either -1, 0 or 1
          * @memberof Pyjamas.Version
          */
-        function compare (base, other){
-            return diff(base, other).reduce(function(prev, curr){
+        function compare (base, other) {
+            return diff(base, other).reduce(function (prev, curr) {
                 // Note: This is not overly elegant but it is highly optimized
                 // by JavaScript JIT compilers
                 //
@@ -222,7 +222,7 @@ var Pyjamas = (function(){
          * @return {boolean} If the base is less than the other version
          * @memberof Pyjamas.Version
          */
-        function lessThan (base, other){
+        function lessThan (base, other) {
             return compare(base, other) < 0;
         }
 
@@ -247,7 +247,7 @@ var Pyjamas = (function(){
          * @return {string}
          * @memberof Pyjamas.Version
          */
-        function toString (version){
+        function toString (version) {
             return version.join('.');
         }
 
@@ -273,8 +273,10 @@ var Pyjamas = (function(){
      * @return {function} Object's constructor
      * @private
      */
-    function getConstructor (target){
-        return 'undefined' === typeof target ? function(){} : target.constructor;
+    function getConstructor (target) {
+        return 'undefined' === typeof target ?
+            function () {} :
+            target.constructor;
     }
 
     /**
@@ -288,13 +290,13 @@ var Pyjamas = (function(){
      * @return {object} Encoded object
      * @private
      */
-    function encodeEach (keys, target, version){
+    function encodeEach (keys, target, version) {
         var key, output = {};
 
-        for(key in keys){
+        for(key in keys) {
             if(target.hasOwnProperty(key)           &&
                 'undefined' !== typeof target[key]  &&
-                'function'  !== typeof target[key]  ){
+                'function'  !== typeof target[key]  ) {
                 output[key] = encode(target[key]);
             }
         }
@@ -313,7 +315,7 @@ var Pyjamas = (function(){
      * @return {object} Encoded object
      * @private
      */
-    function encode (target){
+    function encode (target) {
         var pjs = PyjamasDB.fetch(getConstructor(target));
 
         return pjs ? encodeEach(pjs.defines, target, pjs.version) :
@@ -331,8 +333,8 @@ var Pyjamas = (function(){
      *
      * @return {*} An instance of the constructor
      */
-    function construct (constructor, value){
-        if ('function' === typeof constructor){
+    function construct (constructor, value) {
+        if ('function' === typeof constructor) {
             return getConstructor(value) === constructor ?
                 value :
                 new constructor(); // jshint ignore : line
@@ -349,15 +351,15 @@ var Pyjamas = (function(){
      * @return {object} New instance of the constructor
      * @private
      */
-    function decode (constructor, target){
+    function decode (constructor, target) {
         var key, instance, pjs;
 
         instance = construct(constructor, target);
 
-        if (PyjamasDB.contains(constructor)){
+        if (PyjamasDB.contains(constructor)) {
             pjs = PyjamasDB.fetch(constructor);
 
-            for(key in pjs.defines){
+            for(key in pjs.defines) {
                 instance[key] = decode(pjs.defines[key], target[key]);
             }
         }
@@ -375,7 +377,7 @@ var Pyjamas = (function(){
      * @constructor
      * @memberof Pyjamas
      */
-    function Pyjamas (version, defines){
+    function Pyjamas (version, defines) {
 
         /**
          * Version identifier of current instance
@@ -404,8 +406,8 @@ var Pyjamas = (function(){
          *
          * @example
          * {
-         *      '0.1.2' : function myUpgrader1(){},
-         *      '0.2.3' : function myUpgrader2(){}
+         *      '0.1.2' : function myUpgrader1() {},
+         *      '0.2.3' : function myUpgrader2() {}
          * }
          * @end
          *
@@ -425,7 +427,7 @@ var Pyjamas = (function(){
      * @end
      *
      * @param upgrader {function} Function to upgrade old save. Prototype:
-     * function( old :  Object, current : Object) : Object
+     * function ( old :  Object, current : Object) : Object
      * @end
      *
      * @return {Pyjamas.Pyjamas} An updated Pyjamas instance
@@ -433,7 +435,7 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas.Pyjamas
      */
-    Pyjamas.prototype.upgrade = function(version, upgrader){
+    Pyjamas.prototype.upgrade = function (version, upgrader) {
         this.upgrades[version] = upgrader;
         return this;
     };
@@ -460,7 +462,7 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas
      */
-    Pyjamas.register = function(constructor, version, defines){
+    Pyjamas.register = function (constructor, version, defines) {
         return PyjamasDB.insert(constructor, new Pyjamas(version, defines));
     };
 
@@ -476,7 +478,7 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas
      */
-    Pyjamas.unregister = function (constructor){
+    Pyjamas.unregister = function (constructor) {
         return PyjamasDB.remove(constructor);
     };
 
@@ -495,7 +497,7 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas
      */
-    Pyjamas.manifest = function (target){
+    Pyjamas.manifest = function (target) {
         return encode(target);
     };
 
@@ -515,7 +517,7 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas
      */
-    Pyjamas.construct = function (constructor, target){
+    Pyjamas.construct = function (constructor, target) {
         return decode(constructor, target);
     };
 
@@ -530,7 +532,7 @@ var Pyjamas = (function(){
      * @public
      * @memberof Pyjamas
      */
-    Pyjamas.toJSON = function(target){
+    Pyjamas.toJSON = function (target) {
         return JSON.stringify(Pyjamas.manifest(target));
     };
 
@@ -551,6 +553,6 @@ var Pyjamas = (function(){
     return Pyjamas;
 }());
 
-if('undefined' !== typeof module){
+if('undefined' !== typeof module) {
     module.exports = Pyjamas;
 }
