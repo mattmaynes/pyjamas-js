@@ -24,7 +24,7 @@
         "karma-phantomjs-launcher"	: "~0.2"
     },
     "scripts" : {
-        "test"		    : "./node_modules/.bin/karma start --signle-run --browsers PhantomJS test/karma.conf.js",
+        "test"		    : "./node_modules/.bin/karma start --signle-run --browsers PhantomJS test/config/pyjamas.conf.js",
         "coverage"	    : "cat ./build/reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
         "make-js"       : "mkdir -p bin && uglify -s src/*.js -o bin/pyjamas.min.js",
         "make-doc"      : "mkdir -p doc && jsdoc -d doc -r src",
