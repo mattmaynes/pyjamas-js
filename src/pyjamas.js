@@ -112,8 +112,12 @@ var Pyjamas = (function () {
          * @memberof Pyjamas.Version
          */
         function split (version) {
-            var parts = version.split('.');
-            return [parts[0] | 0, parts[1] | 0, parts[2] | 0];
+            var parts = (version || '').split('.');
+            return [
+                parseInt(parts[0]) || 0,
+                parseInt(parts[1]) || 0,
+                parseInt(parts[2]) || 0
+            ];
         }
 
         /**
@@ -352,7 +356,7 @@ var Pyjamas = (function () {
      * @private
      */
     function decode (constructor, target) {
-        var key, instance, pjs, versions, version;
+        var key, instance, pjs, versions, i, buffer;
 
         instance = construct(constructor, target);
 
@@ -366,8 +370,11 @@ var Pyjamas = (function () {
             // Before we decode the constructor we need to apply
             // any defined upgrade functions to the raw object
             versions = Object.keys(pjs.upgrades).sort(Version.compare);
-            for (version in versions) {
-                target = pjs.upgrades[version](target);
+            for (i in versions) {
+                if (Version.greaterThan(versions[i], target.version)) {
+                    buffer = pjs.upgrades[versions[i]](target);
+                    target = buffer ? buffer : target;
+                }
             }
 
             // For each defined value we need to decode it
