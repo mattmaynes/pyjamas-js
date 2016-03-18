@@ -573,6 +573,4 @@ var Pyjamas = (function () {
     return Pyjamas;
 }());
 
-if('undefined' !== typeof module) {
-    module.exports = Pyjamas;
-}
+if('undefined' !== typeof module)  module.exports = Pyjamas;
