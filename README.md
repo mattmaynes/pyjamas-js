@@ -12,9 +12,15 @@ solution to source changes in the form of *upgraders* that can be applied to
 persisted objects to mutate fields to reflect the current state of the source
 definition.
 
-## Example
+## Usage 
 
 ### Class Registration
+Objects are registered to the Pyjamas database and then used to serialized
+and de-serialize instances of the object with the same prototype. Objects 
+need to be registered with the PyjamasDB before they are reflected or 
+reconstructed. Registering an object to the PyjamasDB creates a new Pyjamas
+instance that contains meta information that is essential to persisting 
+and constructing instances.
 
 ```JavaScript
 // Assume we have some class A that has instance variables foo and bar
@@ -48,6 +54,8 @@ Pyjamas.register(MyClass, '0.1.2',{
 ```
 
 ### Persistence and Construction
+If an object has been registered into the PyjamasDB then we can use the Pyjamas
+singleton to persist and reconstruct instances of that object.
 
 ```JavaScript
 // Create a new instance of MyClass
@@ -59,3 +67,9 @@ var json = Pyjamas.toJSON(obj);
 // Reconstruct the instance from above
 var objCopy = Pyjamas.construct(MyClass, json);
 ```
+
+## Roadmap
+Pyjamas is currently fully functioning for **most** practical applications. In
+the future there will be added support for custom version formats as currently
+only the standard `major.minor.patch` versioning system is supported.
+
