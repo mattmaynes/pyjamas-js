@@ -6,8 +6,12 @@ module.exports = function(config){
 
     config.set({
         // The project root path. All file paths are relative to this path
-        basePath		: '../',
-        files			: ['test/patch/*.js', 'src/*.js', 'test/*.spec.js'],
+        basePath		: '../../',
+        files			: [
+            'test/patch/*.js',
+            'src/*.js',
+            'test/specs/*.spec.js'
+        ],
         plugins			: [
             'karma-jasmine',
             'karma-coverage',
