@@ -14,7 +14,7 @@ describe('Pyjamas.construct', function () {
         };
 
         return MyClassA;
-    })();
+    }());
 
     var MyClassB = (function () {
         function MyClassB (name) {
@@ -23,7 +23,7 @@ describe('Pyjamas.construct', function () {
             this.b = 1;
         }
         return MyClassB;
-    })();
+    }());
 
     var MyClassC = (function () {
         function MyClassC (name) {
@@ -31,7 +31,7 @@ describe('Pyjamas.construct', function () {
             this.a = new MyClassA();
         }
         return MyClassC;
-    })();
+    }());
 
 
     beforeEach(function () {
