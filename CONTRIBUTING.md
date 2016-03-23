@@ -1,12 +1,5 @@
 # How to contribute
 
-## Testing
-
-All public features need an associated Jasmine test specification. Tests are
-run using Karma and run in PhantomJS. To run the test suite ensure that you
-have installed all the project dependencies using `npm install`. The test
-scripts can be run with `npm test`.
-
 ## Submitting changes
 
 Please send a [GitHub Pull Request to mattmaynes](https://github.com/mattmaynes/pyjamas-js/compare)
@@ -24,6 +17,13 @@ for small changes, but bigger changes should look like this:
     >
     > A paragraph describing what changed and its impact."
 
+## Testing
+
+All public features need an associated Jasmine test specification. Tests are
+run using Karma and run in PhantomJS. To run the test suite ensure that you
+have installed all the project dependencies using `npm install`. The test
+scripts can be run with `npm test`.
+
 ## Coding conventions
 
 These coding conventions are optimized for consistency and readability:
@@ -31,8 +31,10 @@ These coding conventions are optimized for consistency and readability:
 * Indentation should be a full tab (4 spaces)
 * ALWAYS put spaces after list items and method parameters (`[1, 2, 3]`
 , not `[1,2,3]`), around operators (`x += 1`, not `x+=1`), and around
-hash arrows.
-* Comment code only where you use non-standard syntax
+hash arrows
+* Use standard documentation [@tags](http://usejsdoc.org)
+* Comment code where you use non-standard syntax
+* Use spaces between names parenthesis `function () { if (...) { ... } }`
 * Strive for *functional* over *imperative*
 * Use *map-reduce* over *recursion* over *loops* (no stinking loops!)
 * Use *camelCase* for functions and variables (but try to avoid it)
