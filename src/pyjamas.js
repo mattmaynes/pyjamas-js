@@ -380,7 +380,9 @@ var Pyjamas = (function () {
             // For each defined value we need to decode it
             // and recursively apply  the corresponding constructor
             for (key in pjs.defines) {
-                instance[key] = decode(pjs.defines[key], target[key]);
+                if (pjs.defines.hasOwnProperty(key)) {
+                    instance[key] = decode(pjs.defines[key], target[key]);
+                }
             }
         }
 
