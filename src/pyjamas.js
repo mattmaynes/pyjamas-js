@@ -114,9 +114,9 @@ var Pyjamas = (function () {
         function split (version) {
             var parts = (version || '').split('.');
             return [
-                parseInt(parts[0]) || 0,
-                parseInt(parts[1]) || 0,
-                parseInt(parts[2]) || 0
+                parseInt(parts[0], 10) || 0,
+                parseInt(parts[1], 10) || 0,
+                parseInt(parts[2], 10) || 0
             ];
         }
 
