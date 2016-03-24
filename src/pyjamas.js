@@ -347,6 +347,30 @@ var Pyjamas = (function () {
     }
 
     /**
+     * Applies all upgrade functions to the target instance and
+     * returns the new target. The versions are sorted in ascending
+     * order before being applied.
+     *
+     * @param pjs       {Pyjamas}   Pyjamas instance matching the target type
+     * @param target    {object}    Raw object instance to upgrade
+     *
+     * @return {object} Raw target with upgrade functions applied
+     */
+    function upgrade (pjs, target) {
+        var i, buffer, versions;
+
+        // Before we decode the constructor we need to apply
+        // any defined upgrade functions to the raw object
+        versions = Object.keys(pjs.upgrades).sort(Version.compare);
+        for (i in versions) {
+            if (Version.greaterThan(versions[i], target.version)) {
+                buffer = pjs.upgrades[versions[i]](target);
+                target = buffer ? buffer : target;
+            }
+        }
+        return target;
+    }
+    /**
      * Decodes an object to become an instance of the given constructor
      *
      * @param constructor   {function}  Object constructor
@@ -356,7 +380,7 @@ var Pyjamas = (function () {
      * @private
      */
     function decode (constructor, target) {
-        var key, instance, pjs, versions, i, buffer;
+        var key, instance, pjs;
 
         instance = construct(constructor, target);
 
@@ -366,16 +390,7 @@ var Pyjamas = (function () {
         // the new instance.
         if (PyjamasDB.contains(constructor)) {
             pjs = PyjamasDB.fetch(constructor);
-
-            // Before we decode the constructor we need to apply
-            // any defined upgrade functions to the raw object
-            versions = Object.keys(pjs.upgrades).sort(Version.compare);
-            for (i in versions) {
-                if (Version.greaterThan(versions[i], target.version)) {
-                    buffer = pjs.upgrades[versions[i]](target);
-                    target = buffer ? buffer : target;
-                }
-            }
+            target = upgrade(pjs, target);
 
             // For each defined value we need to decode it
             // and recursively apply  the corresponding constructor
