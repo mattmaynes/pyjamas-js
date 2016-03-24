@@ -33,7 +33,6 @@ describe('Pyjamas.construct', function () {
         return MyClassC;
     }());
 
-
     beforeEach(function () {
         myA = new MyClassA();
         myB = new MyClassB('Pyjamas');
@@ -68,7 +67,7 @@ describe('Pyjamas.construct', function () {
         var instance;
         Pyjamas.register(MyClassC, '1.2.3', {
             name    : String,
-            a       : MyClassA,
+            a       : MyClassA
         })
         .upgrade('0.5.0', function (raw) {
             raw.name = 'goodbye ' + raw.name;
