@@ -3,7 +3,6 @@
 describe ('Pyjamas.toJSON', function() {
     'use strict';
 
-
     var myObj;
     var MyClass = (function () {
         function MyClass() {
@@ -16,7 +15,7 @@ describe ('Pyjamas.toJSON', function() {
         };
 
         return MyClass;
-    })();
+    }());
 
     beforeEach(function () {
         myObj = new MyClass();
