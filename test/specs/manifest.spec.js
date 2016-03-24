@@ -15,7 +15,7 @@ describe('Pyjamas.manifest', function(){
         };
 
         return MyClassA;
-    })();
+    }());
 
     var MyClassB = (function(){
         function MyClassB(name){
@@ -23,7 +23,7 @@ describe('Pyjamas.manifest', function(){
             this.a = new MyClassA();
         }
         return MyClassB;
-    })();
+    }());
 
     beforeEach(function(){
         myA = new MyClassA();
