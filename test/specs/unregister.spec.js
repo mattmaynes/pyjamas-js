@@ -14,7 +14,7 @@ describe ('Pyjamas.unregister', function(){
         };
 
         return MyClass;
-    })();
+    }());
 
     beforeEach(function(){
         myObj = new MyClass();
