@@ -32,6 +32,7 @@ describe('Pyjamas.prototype.upgrade', function(){
             function MyClassB (name) {
                 this.name = name;
                 this.a = new MyClassA();
+                this.b = [1, 2, 3];
                 MyClassA.call(this);
             }
             MyClassB.prototype = Object.create(MyClassA.prototype);
@@ -50,6 +51,7 @@ describe('Pyjamas.prototype.upgrade', function(){
             Pyjamas.register(MyClassB, '0.1.0', {
                 name    : String,
                 a       : MyClassA,
+                b       : Array,
             }).extend(MyClassA);
 
         });
@@ -61,10 +63,11 @@ describe('Pyjamas.prototype.upgrade', function(){
                 version : '0.1.0',
                 value   : 1,
                 name    : 'Pyjamas',
+                b       : [1, 2, 3],
                 a       : {
                     version : '0.1.0',
                     value   : 0
-                }
+                },
             });
         });
 

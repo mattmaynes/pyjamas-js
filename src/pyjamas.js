@@ -292,8 +292,9 @@ var Pyjamas = (function () {
     function clone (base) {
         var field, target = {};
         for (field in base) {
-            target[field] = base[field] instanceof Object ?
-                clone(base[field]) :
+            target[field] =
+                Array.isArray(base[field])      ? base[field].map(clone)    :
+                base[field] instanceof Object   ? clone(base[field])        :
                 base[field];
         }
         return target;
@@ -335,16 +336,23 @@ var Pyjamas = (function () {
     function encodeEach (keys, target, version) {
         var key, output = {};
 
-        for(key in keys) {
-            if(target.hasOwnProperty(key)           &&
-                'undefined' !== typeof target[key]  &&
-                'function'  !== typeof target[key]  ) {
-                output[key] = encode(target[key]);
-            }
+        if (Array.isArray(target)) {
+            return target.map(function (x) { return encodeEach(x, x); });
         }
-
-        output.version = version;
-        return output;
+        else if (target instanceof Object) {
+            for (key in keys) {
+                if(target.hasOwnProperty(key)           &&
+                    'undefined' !== typeof target[key]  &&
+                    'function'  !== typeof target[key]  ) {
+                    output[key] = encode(target[key]);
+                }
+            }
+            if (version) {
+                output.version = version;
+            }
+            return output;
+        }
+        return target;
     }
 
     /**
@@ -638,7 +646,7 @@ var Pyjamas = (function () {
     /**
      * @alias Pyjamas.construct
      */
-    Pyjamas.deseiralize = Pyjamas.construct;
+    Pyjamas.deserialize = Pyjamas.construct;
 
     /**
      * Returns a JSON string representation of a target instance
