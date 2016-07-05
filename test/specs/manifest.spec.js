@@ -101,6 +101,9 @@ describe('Pyjamas.manifest', function(){
 
     });
 
+    it('Manifests an undefined input', function () {
+        expect(Pyjamas.manifest(undefined)).toEqual(undefined);
+    });
 });
 
 

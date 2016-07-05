@@ -6,20 +6,19 @@ module.exports = function(config){
 
     config.set({
         // The project root path. All file paths are relative to this path
-        basePath		: '../../',
-        files			: [
-            'test/patch/*.js',
+        basePath        : '../../',
+        files           : [
             'src/*.js',
             'test/specs/*.spec.js'
         ],
-        plugins			: [
+        plugins         : [
             'karma-jasmine',
             'karma-coverage',
             'karma-nested-reporter',
             'karma-phantomjs-launcher'
         ],
-        browsers		: ['PhantomJS'],
-        reporters		: [
+        browsers        : ['PhantomJS'],
+        reporters       : [
             'nested',
             'coverage'
         ],
@@ -31,9 +30,9 @@ module.exports = function(config){
                 { type : 'html', subdir : '.'}
             ]
         },
-        frameworks		: ['jasmine'],
-        port			: 9876,
-        singleRun		: true,
-        preprocessors	: { 'src/*.js': 'coverage'}
+        frameworks      : ['jasmine'],
+        port            : 9876,
+        singleRun       : true,
+        preprocessors   : { 'src/*.js': 'coverage'}
     });
 };
