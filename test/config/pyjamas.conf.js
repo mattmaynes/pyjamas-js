@@ -15,8 +15,7 @@ module.exports = function(config){
             'karma-jasmine',
             'karma-coverage',
             'karma-nested-reporter',
-            'karma-phantomjs-launcher',
-            'karma-chrome-launcher'
+            'karma-phantomjs-launcher'
         ],
         browsers        : ['PhantomJS'],
         reporters       : [
