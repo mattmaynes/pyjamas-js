@@ -94,7 +94,6 @@ var Pyjamas = (function () {
      * 1 is the major version
      * 2 is the minor version
      * 3 is the patch version
-     * @end
      *
      * @public
      * @class Version
@@ -416,7 +415,6 @@ var Pyjamas = (function () {
          *      bar : String,
          *      baz : MyOtherClass
          * }
-         * @end
          *
          * @type {object}
          */
@@ -431,7 +429,6 @@ var Pyjamas = (function () {
          *      '0.1.2' : function myUpgrader1() {},
          *      '0.2.3' : function myUpgrader2() {}
          * }
-         * @end
          *
          * @type {object}
          */
@@ -446,11 +443,9 @@ var Pyjamas = (function () {
      *
      * @param version {string} Version code that indicates the version of the
      * instance returned from this upgrade function
-     * @end
      *
      * @param upgrader {function} Function to upgrade old save. Prototype:
      * function ( old :  Object, current : Object) : Object
-     * @end
      *
      * @return {Pyjamas.Pyjamas} An updated Pyjamas instance
      *
@@ -471,13 +466,11 @@ var Pyjamas = (function () {
      *      bar : String,
      *      baz : MyOtherClass
      * });
-     * @end
      *
      * @param constructor   {function}  Object constructor to register
      * @param version       {string}    Current version of object constructor
      * @param defines       {object}    Definitions of instance variables to
      * persist when given an instance of the constructor's class
-     * @end
      *
      * @return {Pyjamas.Pyjamas} A new Pyjamas instance
      *
@@ -495,7 +488,6 @@ var Pyjamas = (function () {
      *
      * @return {Pyjamas.Pyjamas | null} Removed Pyjamas instance or null if the
      * constructor was not registered
-     * @end
      *
      * @public
      * @memberof Pyjamas
@@ -532,7 +524,6 @@ var Pyjamas = (function () {
      * @param constructor   {function}  Object constructor
      * @param target        {object}    Raw instance to use to populate
      * a new instance of the constructor
-     * @end
      *
      * @return {object} A new instance of the constructor
      *
