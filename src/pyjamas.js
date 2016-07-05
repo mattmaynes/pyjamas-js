@@ -1,4 +1,3 @@
-
 /**
  * Pyjamas is a simple library that provides basic version management for
  * persisting reflections JavaScript code as JSON.
@@ -283,6 +282,46 @@ var Pyjamas = (function () {
     }
 
     /**
+     * Performs a deep clone of an object by copying all non-primitive fields
+     *
+     * @param base {*} Base data to copy
+     *
+     * @return {*} A copy of the target data
+     * @private
+     */
+    function clone (base) {
+        var field, target = {};
+        for (field in base) {
+            target[field] = base[field] instanceof Object ?
+                clone(base[field]) :
+                base[field];
+        }
+        return target;
+    }
+
+    /**
+     * Copies the fields of a target object into the base. If the
+     * 'deep' flag is set then the merge will perform a deep copy
+     * of the object before merging.
+     *
+     * @param base      {object}    Base object to extend
+     * @param target    {object}    Data to copy
+     * @param [deep]    {boolean}   If this merge should be a deep copy
+     *
+     * @return {object} The extended base object
+     * @private
+     */
+    function merge (base, target, deep) {
+        var field;
+        target = deep ? clone(target) : target;
+
+        for (field in target) {
+            base[field] = target[field];
+        }
+        return base;
+    }
+
+    /**
      * Encodes each key in the target if it is defined and defined in the
      * prototype of the object
      *
@@ -319,11 +358,16 @@ var Pyjamas = (function () {
      * @private
      */
     function encode (target) {
-        var pjs = PyjamasDB.fetch(getConstructor(target));
+        var parent = {},
+            pjs = PyjamasDB.fetch(getConstructor(target));
 
-        return pjs ? encodeEach(pjs.defines, target, pjs.version) :
-            target instanceof Object ? encodeEach(target, target) :
-            target;
+        if (pjs) {
+            if (pjs.parent) {
+                parent = encode(merge(clone(target), {constructor : pjs.parent}));
+            }
+            return merge(parent, encodeEach(pjs.defines, target, pjs.version));
+        }
+        return target instanceof Object ? encodeEach(target, target) : target;
     }
 
     /**
@@ -335,6 +379,7 @@ var Pyjamas = (function () {
      * @param value         {*}         Instance of constructor or nothing
      *
      * @return {*} An instance of the constructor
+     * @private
      */
     function construct (constructor, value) {
         if ('function' === typeof constructor) {
@@ -343,6 +388,29 @@ var Pyjamas = (function () {
                 new constructor(); // jshint ignore : line
         }
         return value;
+    }
+
+    /**
+     * Apply all upgraders to stored in a Pyjamas instance to the
+     * given target. The upgraders will be ordered by version and
+     * executed in order
+     *
+     * @param pjs       {Pyjamas.Pyjamas}   Pyjamas instance
+     * @param target    {object}            Target to upgrade
+     *
+     * @return {object} Upgraded target
+     * @private
+     */
+    function upgrade (pjs, target) {
+        var i, versions, buffer;
+        versions = Object.keys(pjs.upgrades).sort(Version.compare);
+        for (i in versions) {
+            if (Version.greaterThan(versions[i], target.version)) {
+                buffer = pjs.upgrades[versions[i]](target);
+                target = buffer ? buffer : target;
+            }
+        }
+        return target;
     }
 
     /**
@@ -355,7 +423,7 @@ var Pyjamas = (function () {
      * @private
      */
     function decode (constructor, target) {
-        var key, instance, pjs, versions, i, buffer;
+        var key, instance, pjs;
 
         instance = construct(constructor, target);
 
@@ -366,15 +434,16 @@ var Pyjamas = (function () {
         if (PyjamasDB.contains(constructor)) {
             pjs = PyjamasDB.fetch(constructor);
 
+            // If we have a Pyjamas instance then we need to ensure
+            // that we decode any parent properties before decoding this
+            // object
+            if (pjs.parent) {
+                target = merge(decode(pjs.parent, target), target);
+            }
+
             // Before we decode the constructor we need to apply
             // any defined upgrade functions to the raw object
-            versions = Object.keys(pjs.upgrades).sort(Version.compare);
-            for (i in versions) {
-                if (Version.greaterThan(versions[i], target.version)) {
-                    buffer = pjs.upgrades[versions[i]](target);
-                    target = buffer ? buffer : target;
-                }
-            }
+            target = upgrade(pjs, target);
 
             // For each defined value we need to decode it
             // and recursively apply  the corresponding constructor
@@ -433,6 +502,15 @@ var Pyjamas = (function () {
          * @type {object}
          */
         this.upgrades = {};
+
+        /**
+         * Parent to Pyjamas instance. When serializing, any fields
+         * in the parent will be applied to this instance.
+         *
+         * @type {object}
+         * @see Pyjamas.prototype.extend
+         */
+        this.parent = null;
     }
 
     /**
@@ -454,6 +532,24 @@ var Pyjamas = (function () {
      */
     Pyjamas.prototype.upgrade = function (version, upgrader) {
         this.upgrades[version] = upgrader;
+        return this;
+    };
+
+    /**
+     * Extends this Pyjamas instance so it has the given parent. If the parent
+     * is a registered Pyjamas instance then any of the parents fields will be
+     * applied to the child. When deserializing, the parent's upgrade functions
+     * will be applied to this instance before applying its upgraders.
+     *
+     * @param parent {function} Constructor of parent instance
+     *
+     * @return {Pyjamas.Pyjamas} An updated Pyjamas instance
+     *
+     * @public
+     * @memberof Pyjamas.Pyjamas
+     */
+    Pyjamas.prototype.extend = function (parent) {
+        this.parent = parent;
         return this;
     };
 
@@ -516,6 +612,11 @@ var Pyjamas = (function () {
     };
 
     /**
+     * @alias Pyjamas.manifest
+     */
+    Pyjamas.serialize = Pyjamas.manifest;
+
+    /**
      * Reconstructs a persisted object as an instance of the given constructor.
      * If the given target is not at the current version of the constructor then
      * upgraders will be successively applied until the highest version is
@@ -533,6 +634,11 @@ var Pyjamas = (function () {
     Pyjamas.construct = function (constructor, target) {
         return decode(constructor, target);
     };
+
+    /**
+     * @alias Pyjamas.construct
+     */
+    Pyjamas.deseiralize = Pyjamas.construct;
 
     /**
      * Returns a JSON string representation of a target instance
