@@ -89,6 +89,15 @@ describe('Pyjamas.construct', function () {
         expect(instance.name).toEqual('hello goodbye tom');
         expect(Pyjamas.manifest(instance).version).toEqual('1.2.3');
     });
+    
+    it('Processes missing registered children', function(){
+        // This intentionally does not include the 'a' attribute of MyClassA
+        var instance = Pyjamas.construct(MyClassB, { name: 'test' });
+        expect(instance.name).toBe('test');
+        expect(instance.a).not.toBe(undefined);
+        expect(instance.a.value).toBe(0);
+        expect(instance.b).toBe(1);
+    });
 
 });
 
