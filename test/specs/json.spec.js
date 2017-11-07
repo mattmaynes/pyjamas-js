@@ -30,5 +30,10 @@ describe ('Pyjamas.toJSON', function() {
         expect(typeof Pyjamas.toJSON(myObj)).toBe('string');
 
     });
+    
+    it('Ensures that toJSON handles null values', function() {
+        myObj.value = null;
+        expect(typeof Pyjamas.toJSON(myObj)).toBe('string');
+    });
 
 });

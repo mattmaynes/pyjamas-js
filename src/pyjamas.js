@@ -276,7 +276,7 @@ var Pyjamas = (function () {
      * @private
      */
     function getConstructor (target) {
-        return 'undefined' === typeof target ?
+        return ('undefined' === typeof target || target === null) ?
             function () {} :
             target.constructor;
     }
