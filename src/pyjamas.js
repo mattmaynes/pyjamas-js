@@ -383,18 +383,31 @@ var Pyjamas = (function () {
      * If so then returns the value, otherwise it returns a new
      * instance of the constructor
      *
-     * @param constructor   {function}          Object constructor
-     * @param value         {*}                 Instance of constructor or nothing
-     * @param pjs           {Pyjamas.Pyjamas}   Pyjamas instance
+     * @param constructor   {function}  Object constructor
+     * @param value         {*}         Instance of constructor or nothing
+     * @param defers        {Array}     Constructors to defer execution
      *
      * @return {*} An instance of the constructor
      * @private
      */
-    function construct (constructor, value, pjs) {
-        if ('function' === typeof constructor && (pjs.defers || []).indexOf(constructor) < 0) {
-            return getConstructor(value) === constructor ?
-                value :
-                new constructor(); // jshint ignore : line
+    function construct (constructor, value, defers) {
+        if ('function' === typeof constructor) {
+            if (getConstructor(value) === constructor) {
+                return value;
+            } else if (defers.indexOf(constructor) < 0) {
+                return new constructor(); // jshint ignore : line
+            } else {
+                var props = {};
+                for (var prop in value) {
+                    props[prop] = {
+                        value       : value[prop],
+                        writebale   : true,
+                        readable    : true,
+                        enumerable  : true
+                    };
+                }
+                return Object.create(constructor.prototype, props);
+            }
         }
         return value;
     }
@@ -430,15 +443,17 @@ var Pyjamas = (function () {
      *
      * @param constructor   {function}  Object constructor
      * @param target        {object}    Raw object that populates a new instance
+     * @param [defers]      {Array}     Constructors to defer execution
      *
      * @return {object} New instance of the constructor
      * @private
      */
-    function decode (constructor, target) {
+    function decode (constructor, target, defers) {
         var key, instance, pjs;
 
-        pjs = PyjamasDB.fetch(constructor) || {};
-        instance = construct(constructor, target, pjs);
+        pjs      = PyjamasDB.fetch(constructor) || {};
+        defers   = (pjs.defers || []).concat(defers || []);
+        instance = construct(constructor, target, defers);
 
         // If the constructor is in the Pyjamas database
         // then we need to fetch the Pyjamas configuration
@@ -450,7 +465,7 @@ var Pyjamas = (function () {
             // that we decode any parent properties before decoding this
             // object
             if (pjs.parent) {
-                target = merge(decode(pjs.parent, target), target);
+                target = merge(decode(pjs.parent, target, defers), target);
             }
 
             // Before we decode the constructor we need to apply
@@ -461,7 +476,7 @@ var Pyjamas = (function () {
             // and recursively apply  the corresponding constructor
             for (key in pjs.defines) {
                 if (pjs.defines.hasOwnProperty(key) && target[key] !== undefined) {
-                    instance[key] = decode(pjs.defines[key], target[key]);
+                    instance[key] = decode(pjs.defines[key], target[key], defers);
                 }
             }
         }

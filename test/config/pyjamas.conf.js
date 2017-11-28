@@ -19,8 +19,8 @@ module.exports = function(config){
         ],
         browsers        : ['PhantomJS'],
         reporters       : [
-            'nested',
-            'coverage'
+            'coverage',
+            'progress'
         ],
         coverageReporter: {
             dir: 'build/reports/coverage',

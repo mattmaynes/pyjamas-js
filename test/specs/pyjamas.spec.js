@@ -78,24 +78,12 @@ describe('Pyjamas.prototype.upgrade', function(){
     });
 
     describe('Deferred Construction', function () {
-        var myA, myB;
-
-        var MyClassA = (function () {
-            function MyClassA() {}
-            return MyClassA;
-        }());
-
-        var MyClassB = (function () {
-            function MyClassB () {
+        var MyClassA = function () {},
+            MyClassB = function () {
                 this.a = new MyClassA();
-            }
-            return MyClassB;
-        }());
+            };
 
         beforeEach(function () {
-            myA = new MyClassA();
-            myB = new MyClassB();
-
             Pyjamas.register(MyClassA, '0.1.0');
             Pyjamas.register(MyClassB, '0.1.0', {
                 a : MyClassA,
@@ -104,10 +92,9 @@ describe('Pyjamas.prototype.upgrade', function(){
         });
 
         it('Does not execute MyClassA', function () {
-            spyOn(myA, 'constructor');
+            var myB  = new MyClassB(),
+                newB = Pyjamas.construct(MyClassB, Pyjamas.manifest(myB));
 
-            var newB = Pyjamas.construct(MyClassB, Pyjamas.manifest(myB));
-            expect(myA.constructor).not.toHaveBeenCalled();
             expect(newB instanceof MyClassB).toBeTruthy();
             expect(newB.a instanceof MyClassA).toBeTruthy();
         });
