@@ -397,16 +397,7 @@ var Pyjamas = (function () {
             } else if (defers.indexOf(constructor) < 0) {
                 return new constructor(); // jshint ignore : line
             } else {
-                var props = {};
-                for (var prop in value) {
-                    props[prop] = {
-                        value       : value[prop],
-                        writebale   : true,
-                        readable    : true,
-                        enumerable  : true
-                    };
-                }
-                return Object.create(constructor.prototype, props);
+                return merge(Object.create(constructor.prototype), value);
             }
         }
         return value;
