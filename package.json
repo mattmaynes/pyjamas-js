@@ -1,34 +1,37 @@
 {
-    "name"          : "pyjamas",
-    "main"          : "Pyjamas",
-    "version"       : "0.0.2",
-    "description"   : "Versioned persistable JavaScript that keeps your code cozy",
-    "homepage"      : "https://github.com/mattmaynes/pyjamas-js",
-    "bugs"          : {
-        "url" : "https://github.com/mattmaynes/pyjamas-js/issues"
+    "name": "pyjamas",
+    "main": "Pyjamas",
+    "version": "0.0.2",
+    "description": "Versioned persistable JavaScript that keeps your code cozy",
+    "homepage": "https://github.com/mattmaynes/pyjamas-js",
+    "bugs": {
+        "url": "https://github.com/mattmaynes/pyjamas-js/issues"
     },
-    "license"       : "MIT",
-    "author"        : "Matthew Maynes <matthewmaynes1@gmail.com>",
-    "repository" : {
-        "type"  : "git",
-        "url"   : "https://github.com/mattmaynes/pyjamas-js.git"
+    "license": "MIT",
+    "author": "Matthew Maynes <matthewmaynes1@gmail.com>",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mattmaynes/pyjamas-js.git"
     },
-    "devDependencies" : {
-        "jsdoc"                     : "*",
-        "phantomjs"                 : "*",
-        "jasmine-core"              : "*",
-        "karma"                     : "*",
-        "karma-jasmine"             : "*",
-        "karma-coverage"            : "*",
-        "karma-coveralls"           : "*",
-        "karma-nested-reporter"     : "*",
-        "karma-phantomjs-launcher"  : "*"
+    "devDependencies": {
+        "jsdoc": "*",
+        "phantomjs": "*",
+        "jasmine-core": "*",
+        "karma": "*",
+        "karma-jasmine": "*",
+        "karma-coverage": "*",
+        "karma-coveralls": "*",
+        "karma-nested-reporter": "*",
+        "karma-phantomjs-launcher": "*"
     },
-    "scripts" : {
-        "test"          : "./node_modules/.bin/karma start --signle-run --browsers PhantomJS test/config/pyjamas.conf.js",
-        "coverage"      : "cat ./build/reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-        "make-js"       : "mkdir -p bin && uglify -s src/*.js -o bin/pyjamas.min.js",
-        "make-doc"      : "mkdir -p doc && jsdoc -d doc -r src",
-        "make"          : "npm test && npm run make-js && npm run make-doc"
+    "scripts": {
+        "test": "./node_modules/.bin/karma start --signle-run --browsers PhantomJS test/config/pyjamas.conf.js",
+        "coverage": "cat ./build/reports/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+        "make-js": "mkdir -p bin && uglify -s src/*.js -o bin/pyjamas.min.js",
+        "make-doc": "mkdir -p doc && jsdoc -d doc -r src",
+        "make": "npm test && npm run make-js && npm run make-doc"
+    },
+    "dependencies": {
+        "karma-cli": "^1.0.1"
     }
 }

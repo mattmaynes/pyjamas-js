@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/mattmaynes/pyjamas-js.svg)](https://travis-ci.org/mattmaynes/pyjamas-js)
 [![Coverage Status](https://coveralls.io/repos/mattmaynes/pyjamas-js/badge.svg?branch=master&service=github)](https://coveralls.io/github/mattmaynes/pyjamas-js?branch=master)
-[![Code Climate](https://codeclimate.com/github/mattmaynes/pyjamas-js/badges/gpa.svg)](https://codeclimate.com/github/mattmaynes/pyjamas-js)
 
 ## Overview
 Pyjamas is a simple JavaScript library for versioning and persisting objects and

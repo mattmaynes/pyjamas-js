@@ -383,14 +383,15 @@ var Pyjamas = (function () {
      * If so then returns the value, otherwise it returns a new
      * instance of the constructor
      *
-     * @param constructor   {function}  Object constructor
-     * @param value         {*}         Instance of constructor or nothing
+     * @param constructor   {function}          Object constructor
+     * @param value         {*}                 Instance of constructor or nothing
+     * @param pjs           {Pyjamas.Pyjamas}   Pyjamas instance
      *
      * @return {*} An instance of the constructor
      * @private
      */
-    function construct (constructor, value) {
-        if ('function' === typeof constructor) {
+    function construct (constructor, value, pjs) {
+        if ('function' === typeof constructor && (pjs.defers || []).indexOf(constructor) < 0) {
             return getConstructor(value) === constructor ?
                 value :
                 new constructor(); // jshint ignore : line
@@ -436,14 +437,14 @@ var Pyjamas = (function () {
     function decode (constructor, target) {
         var key, instance, pjs;
 
-        instance = construct(constructor, target);
+        pjs = PyjamasDB.fetch(constructor) || {};
+        instance = construct(constructor, target, pjs);
 
         // If the constructor is in the Pyjamas database
         // then we need to fetch the Pyjamas configuration
         // so that we can apply the correct properties to
         // the new instance.
         if (PyjamasDB.contains(constructor)) {
-            pjs = PyjamasDB.fetch(constructor);
 
             // If we have a Pyjamas instance then we need to ensure
             // that we decode any parent properties before decoding this
@@ -522,7 +523,36 @@ var Pyjamas = (function () {
          * @see Pyjamas.prototype.extend
          */
         this.parent = null;
+
+        /**
+         * List of constructors to defer execution of
+         *
+         * @type {Array}
+         */
+        this.defers = [];
     }
+
+    /**
+     * Defers executing the given constructor. This can allow an object
+     * to be built only using its current values and will not execute the
+     * constructor. This will only copy the prototype from the constructor.
+     *
+     * @param constructor {function} Object constructor
+     *
+     * @return {Pyjamas.Pyjamas} This Pyjamas instance
+     *
+     * @example
+     * Pyjamas.register(Foo, {
+     *      a : Number,
+     *      b : String,
+     *      c : Bar
+     * }).defer(Bar);
+     *
+     */
+    Pyjamas.prototype.defer = function (constructor) {
+        this.defers.push(constructor);
+        return this;
+    };
 
     /**
      * Registers an upgrade function to this Pyjamas instance. An upgrade
