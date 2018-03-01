@@ -446,11 +446,16 @@ var Pyjamas = (function () {
         defers   = (pjs.defers || []).concat(defers || []);
         instance = construct(constructor, target, defers);
 
-        // If the constructor is in the Pyjamas database
-        // then we need to fetch the Pyjamas configuration
-        // so that we can apply the correct properties to
-        // the new instance.
-        if (PyjamasDB.contains(constructor)) {
+        // If the constructor is an array then it contains the type of the array
+        // so map the target to the correct types
+        if (Array.isArray(constructor) && Array.isArray(target)) {
+            return target.map(function (target, i) {
+                decode(constructor[i] || constructor[0], target, defers);
+            });
+        }
+        // If the constructor is in the Pyjamas database then we need to fetch the Pyjamas
+        // configuration so that we can apply the correct properties to the new instance.
+        else if (PyjamasDB.contains(constructor)) {
 
             // If we have a Pyjamas instance then we need to ensure
             // that we decode any parent properties before decoding this
