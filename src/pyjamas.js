@@ -450,7 +450,7 @@ var Pyjamas = (function () {
         // so map the target to the correct types
         if (Array.isArray(constructor) && Array.isArray(target)) {
             return target.map(function (target, i) {
-                decode(constructor[i] || constructor[0], target, defers);
+                return decode(constructor[i] || constructor[0], target, defers);
             });
         }
         // If the constructor is in the Pyjamas database then we need to fetch the Pyjamas
