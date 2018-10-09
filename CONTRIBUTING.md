@@ -39,5 +39,3 @@ hash arrows
 * Use *map-reduce* over *recursion* over *loops* (no stinking loops!)
 * Use *camelCase* for functions and variables (but try to avoid it)
 
-
-
